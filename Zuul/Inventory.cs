@@ -4,47 +4,51 @@ using System.Text;
 
 namespace Zuul
 {
-    class Inventory
+    public class Inventory
     {
         private int maxWeight;
         private Dictionary<string, Item> items;
-        private Command command;
         private int totalWeight = 0;
+		public string itemList = null;
+		private int remainingWeight;
         public Inventory(int maxWeight)
         {
             this.maxWeight = maxWeight;
             this.items = new Dictionary<string , Item>();
-            items.Add("hammer", new Item(3, "Hammer"));
         }
         public bool Put(string itemName, Item item)
         {
-            foreach (KeyValuePair<string, Item> entry in items)
-            {
-                totalWeight = totalWeight + entry.Value.Weight;
-            }
-            if(totalWeight <= maxWeight)
-            {
+				items.Add(itemName, item);
                 return true;
-            }
-            // check the Weight of the Item!
-            // put Item in the items Collection
-            // return true/false for success/failure
-            return false;
         }
         public Item Get(string itemName)
         {
-            switch(itemName)
-            {
-                case "hammer":
-                    if(items.ContainsKey("hammer") == true)
-                    {
-
-                    }
-                    break;
-            }
-            // remove Item from items Collection if found
-            // return Item
-            return null;
+			Item item = null;
+			if(items.ContainsKey(itemName))
+			{
+				item = items[itemName];
+				items.Remove(itemName);
+			}
+			return item;
         }
+
+		public string ListChestItems()
+		{
+			foreach (KeyValuePair<string, Item> entry in items)
+			{
+				itemList +=  entry.Key + " " + entry.Value.Description + " " + entry.Value.Weight;
+			}
+			return itemList;
+		}
+		
+		public int RemainingWeight()
+		{
+			foreach (KeyValuePair<string, Item> entry in items)
+			{
+				totalWeight = totalWeight + entry.Value.Weight;
+			}
+			remainingWeight = maxWeight - totalWeight;
+			return remainingWeight;
+		}
     }
 }

@@ -24,6 +24,10 @@ namespace Zuul
 			Room lab = new Room("in a computing lab");
 			Room office = new Room("in the computing admin office");
 			Room cave = new Room("in a dark and unpleasantly moist cave");
+			
+			Item JeMoeder = new Item(2000, "Yo mama so fat she doesn't even fit in your inventory");
+
+			outside.Chest.Put("JeMoeder", JeMoeder);
 
 			// initialise room exits
 			outside.AddExit("east", theatre);
@@ -115,6 +119,12 @@ namespace Zuul
 				case "look":
 					Console.WriteLine(player.CurrentRoom.GetLongDescription());
 					break;
+				case "take":
+					Take(command);
+					break;
+				case "drop":
+					Drop(command);
+					break;
 			}
 
 			return wantToQuit;
@@ -165,7 +175,28 @@ namespace Zuul
 				Console.WriteLine(player.CurrentRoom.GetLongDescription());
 			}
 		}
-	}
 
+		private void Take(Command command)
+		{
+			if (!command.HasSecondWord())
+			{
+				// if there is no second word, we don't know where to go...
+				Console.WriteLine("Take what?");
+				return;
+			}
+			player.TakeFromChest(command.GetSecondWord());
+		}
+
+		private void Drop(Command command)
+		{
+			if (!command.HasSecondWord())
+			{
+				// if there is no second word, we don't know where to go...
+				Console.WriteLine("Drop where?");
+				return;
+			}
+			player.DropToChest(command.GetSecondWord());
+		}
+	}
 }
 
